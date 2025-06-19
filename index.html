@@ -292,7 +292,8 @@
         return;
       }
 
-      let mensagem = "🛒 *Novo pedido";
+       const numeroPedido = Math.floor(Math.random() * 9000) + 1000; // Gera número de 1000 a 9999
+let mensagem = `🛒 *Novo pedido - Nº ${numeroPedido}*`;
       cart.forEach(item => {
         mensagem += `• ${item.name} x${item.quantity} - R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}`;
       });
