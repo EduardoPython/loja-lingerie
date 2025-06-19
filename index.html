@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Loja BRLink Inside - Lingerie</title>
+  <title>Lingerie store</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html {
@@ -59,7 +59,7 @@
   <!-- Cabeçalho -->
   <header class="bg-gradient-to-r from-rose-400 via-pink-400 to-rose-400 relative p-6 text-center text-white font-bold text-3xl">
     <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80')] bg-center bg-cover opacity-60 -z-10"></div>
-    BRLink Inside Shop - Lingerie
+    Seja bem vindo(a) a Lingerie Store
   </header>
 
   <!-- Alerta -->
@@ -292,14 +292,14 @@
         return;
       }
 
-      let mensagem = "🛒 *Pedido BRLink Inside*%0A%0A";
+      let mensagem = "🛒 *Novo pedido";
       cart.forEach(item => {
-        mensagem += `• ${item.name} x${item.quantity} - R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}%0A`;
+        mensagem += `• ${item.name} x${item.quantity} - R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}`;
       });
 
       const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-      mensagem += `%0A💰 *Total:* R$ ${total.toFixed(2).replace('.', ',')}%0A`;
-      mensagem += `%0A📦 *Endereço de entrega:* %0A${endereco}`;
+      mensagem += `💰 *Total:* R$ ${total.toFixed(2).replace('.', ',')}`;
+      mensagem += `📦 *Endereço de entrega:*{endereco}`;
 
       const numeroWhatsApp = "5511991234567"; // substitua pelo número com DDD
       const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURI(mensagem)}`;
