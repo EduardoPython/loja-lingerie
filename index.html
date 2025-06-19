@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Loja BRLink Inside - Lingerie</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    /* Remove scrollbar for sliders */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* Delicate shadow for product cards */
+    .shadow-delicate {
+      box-shadow: 0 2px 6px rgb(219 39 119 / 0.2);
+    }
+  </style>
+</head>
+<body class="bg-pink-50 text-rose-900 font-sans">
+
+  <!-- Modal endereço centralizado -->
+  <div id="address-modal" 
+       class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg w-full max-w-md relative">
+      <h2 class="text-lg font-bold mb-4 text-rose-700">Informe seu endereço de entrega:</h2>
+      <textarea id="address-input" rows="4" 
+                class="w-full p-2 border border-rose-300 rounded mb-4 resize-none" 
+                placeholder="Rua, Número, Bairro, Cidade,..."></textarea>
+      <div class="flex justify-end gap-3">
+        <button onclick="closeAddressModal()" 
+                class="px-4 py-2 bg-rose-200 rounded hover:bg-rose-300 transition">Cancelar</button>
+        <button onclick="enviarPedidoWhatsapp()" 
+                class="px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-700 transition">Enviar Pedido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal carrinho centralizado -->
+  <div id="cart-modal" 
+       class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg w-full max-w-md relative">
+      <button id="close-cart" 
+              class="absolute top-2 right-2 text-rose-700 hover:text-rose-900 text-2xl font-bold">&times;</button>
+      <h2 class="text-xl font-bold mb-4 text-rose-700">Carrinho de compras</h2>
+      <div id="cart-items" class="space-y-4 max-h-64 overflow-y-auto"></div>
+      <div class="mt-4 font-semibold text-rose-900">Total: R$ <span id="cart-total">0,00</span></div>
+      <button onclick="finalizarCompra()" 
+              class="mt-6 w-full bg-rose-600 text-white py-2 rounded hover:bg-rose-700 transition font-semibold">Finalizar Compra</button>
+    </div>
+  </div>
+
+  <!-- Cabeçalho -->
+  <header class="bg-gradient-to-r from-rose-400 via-pink-400 to-rose-400 relative p-6 text-center text-white font-bold text-3xl">
+    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80')] bg-center bg-cover opacity-60 -z-10"></div>
+    BRLink Inside Shop - Lingerie
+  </header>
+
+  <!-- Alerta -->
+  <div id="alert-msg" 
+       class="hidden fixed top-6 right-6 bg-rose-600 text-white px-4 py-2 rounded shadow-lg z-50">
+    Produto adicionado ao carrinho
+  </div>
+
+  <!-- Menu Navegação -->
+  <nav class="bg-white shadow-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap gap-4 justify-center">
+      <a href="#conjuntos" class="text-rose-600 font-medium px-4 py-2 rounded-full hover:bg-rose-600 hover:text-white transition duration-300">Conjuntos</a>
+      <a href="#sutias" class="text-rose-600 font-medium px-4 py-2 rounded-full hover:bg-rose-600 hover:text-white transition duration-300">Sutiãs</a>
+      <a href="#calcinhas" class="text-rose-600 font-medium px-4 py-2 rounded-full hover:bg-rose-600 hover:text-white transition duration-300">Calcinhas</a>
+      <a href="#acessorios" class="text-rose-600 font-medium px-4 py-2 rounded-full hover:bg-rose-600 hover:text-white transition duration-300">Acessórios</a>
+      <button id="open-cart" 
+              class="ml-4 bg-white text-rose-600 font-semibold px-3 py-1 rounded hover:bg-rose-100 transition">
+        Carrinho (<span id="cart-count">0</span>)
+      </button>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto p-6 space-y-14">
+
+    <!-- Seção Conjuntos -->
+    <section id="conjuntos">
+      <h2 class="text-3xl font-semibold text-rose-700 mb-6 border-b border-rose-300 pb-2">Conjuntos</h2>
+      <div class="relative">
+        <button id="prev-conjuntos" 
+                class="absolute left-0 top-1/2 -translate-y-1/2 bg-rose-600 text-white p-2 rounded-full shadow hover:bg-rose-700 z-10 select-none">&lt;</button>
+        <div id="slider-conjuntos" 
+             class="overflow-x-auto scroll-smooth flex gap-6 no-scrollbar py-2">
+          <!-- Exemplos de produtos -->
+          <div class="min-w-[180px] bg-white rounded-lg shadow-delicate p-4 flex flex-col items-center">
+            <img src="imagens/conjunto1.jpg" alt="Conjunto 1" class="w-40 h-40 object-cover rounded mb-3" />
+            <h3 class="text-lg font-semibold mb-1">Conjunto 1</h3>
+            <p class="text-rose-700 font-bold mb-2">R$ 299,90</p>
+            <button onclick="addToCart('Conjunto 1', 299.90)" class="bg-rose-600 text-white rounded px-4 py-2 hover:bg-rose-700 transition w-full">Adicionar</button>
+          </div>
+          <!-- Repita e adicione até 20 produtos -->
+        </div>
+        <button id="next-conjuntos" 
+                class="absolute right-0 top-1/2 -translate-y-1/2 bg-rose-600 text-white p-2 rounded-full shadow hover:bg-rose-700 z-10 select-none">&gt;</button>
+      </div>
+    </section>
+
+    <!-- Seção Sutiãs -->
+    <section id="sutias">
+      <h2 class="text-3xl font-semibold text-rose-700 mb-6 border-b border-rose-300 pb-2">Sutiãs</h2>
+      <div class="relative">
+        <button id="prev-sutias" 
+                class="absolute left-0 top-1/2 -translate-y-1/2 bg-rose-600 text-white p-2 rounded-full shadow hover:bg-rose-700 z-10 select-none">&lt;</button>
+        <div id="slider-sutias" 
+             class="overflow-x-auto scroll-smooth flex gap-6 no-scrollbar py-2">
+          <div class="min-w-[180px] bg-white rounded-lg shadow-delicate p-4 flex flex-col items-center">
+            <img src="imagens/sutia1.jpg" alt="Sutiã 1" class="w-40 h-40 object-cover rounded mb-3" />
+            <h3 class="text-lg font-semibold mb-1">Sutiã 1</h3>
+            <p class="text-rose-700 font-bold mb-2">R$ 159,90</p>
+            <button onclick="addToCart('Sutiã 1', 159.90)" class="bg-rose-600 text-white rounded px-4 py-2 hover:bg-rose-700 transition w-full">Adicionar</button>
+          </div>
+          <!-- Adicione até 20 produtos -->
+        </div>
+        <button id="next-sutias" 
+                class="absolute right-0 top-1/2 -translate-y-1/2 bg-rose-600 text-white p-2 rounded-full shadow hover:bg-rose-700 z-10 select-none">&gt;</button>
+      </div>
+    </section>
+
+    <!-- Seção Calcinhas -->
+    <section id="calcinhas">
+      <h2 class="text-3xl font-semibold text-rose-700 mb-6 border-b border-rose-300 pb-2">Calcinhas</h2>
+      <div class="relative">
+        <button id="prev-calcinhas" 
+                class="absolute left-0 top-1/2 -translate-y-1/2 bg-rose-600 text-white p-2 rounded-full shadow hover:bg-rose-700 z-10 select-none">&lt;</button>
+        <div id="slider-calcinhas" 
+             class="overflow-x-auto scroll-smooth flex gap-6 no-scrollbar py-2">
+          <div class="min-w-[180px] bg-white rounded-lg shadow-delicate p-4 flex flex-col items-center">
+            <img src="imagens/calcinha1.jpg" alt="Calcinha 1" class="w-40 h-40 object-cover rounded mb-3" />
+            <h3 class="text-lg font-semibold mb-1">Calcinha 1</h3>
+            <p class="text-rose-700 font-bold mb-2">R$ 69,90</p>
+            <button onclick="addToCart('Calcinha 1', 69.90)" class="bg-rose-600 text-white rounded px-4 py-2 hover:bg-rose-700 transition w-full">Adicionar</button>
+          </div>
+          <!-- Adicione até 20 produtos -->
+        </div>
+        <button id="next-calcinhas" 
+                class="absolute right-0 top-1/2 -translate-y-1/2 bg-rose-600 text-white p-2 rounded-full shadow hover:bg-rose-700 z-10 select-none">&gt;</button>
+      </div>
+    </section>
+
+    <!-- Seção Acessórios -->
+    <section id="acessorios">
+      <h2 class="text-3xl font-semibold text-rose-700 mb-6 border-b border-rose-300 pb-2">Acessórios</h2>
+      <div class="relative">
+        <button id="prev-acessorios" 
+                class="absolute left-0 top-1/2 -translate-y-1/2 bg-rose-600 text-white p-2 rounded-full shadow hover:bg-rose-700 z-10 select-none">&lt;</button>
+        <div id="slider-acessorios" 
+             class="overflow-x-auto scroll-smooth flex gap-6 no-scrollbar py-2">
+          <div class="min-w-[180px] bg-white rounded-lg shadow-delicate p-4 flex flex-col items-center">
+            <img src="imagens/acessorio1.jpg" alt="Acessório 1" class="w-40 h-40 object-cover rounded mb-3" />
+            <h3 class="text-lg font-semibold mb-1">Acessório 1</h3>
+            <p class="text-rose-700 font-bold mb-2">R$ 59,90</p>
+            <button onclick="addToCart('Acessório 1', 59.90)" class="bg-rose-600 text-white rounded px-4 py-2 hover:bg-rose-700 transition w-full">Adicionar</button>
+          </div>
+          <!-- Adicione até 20 produtos -->
+        </div>
+        <button id="next-acessorios" 
+                class="absolute right-0 top-1/2 -translate-y-1/2 bg-rose-600 text-white p-2 rounded-full shadow hover:bg-rose-700 z-10 select-none">&gt;</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Variáveis carrinho
+    const savedCart = localStorage.getItem("carrinho");
+    const cart = savedCart ? JSON.parse(savedCart) : [];
+
+    const openCartBTN = document.getElementById("open-cart");
+    const closeCartBTN = document.getElementById("close-cart");
+    const cartModal = document.getElementById("cart-modal");
+    const cartItemsContainer = document.getElementById("cart-items");
+    const cartTotal = document.getElementById("cart-total");
+    const cartCount = document.getElementById("cart-count");
+
+    updateCart();
+
+    openCartBTN.addEventListener("click", () => {
+      cartModal.classList.remove("hidden");
+    });
+
+    closeCartBTN.addEventListener("click", () => {
+      cartModal.classList.add("hidden");
+    });
+
+    // Fechar modal ao clicar fora da área branca - carrinho
+    cartModal.addEventListener("click", e => {
+      if (e.target === cartModal) {
+        cartModal.classList.add("hidden");
+      }
+    });
+
+    // Fechar modal ao clicar fora da área branca - endereço
+    const addressModal = document.getElementById("address-modal");
+    addressModal.addEventListener("click", e => {
+      if (e.target === addressModal) {
+        closeAddressModal();
+      }
+    });
+
+    function addToCart(name, price) {
+      const item = cart.find(i => i.name === name);
+      if (item) {
+        item.quantity += 1;
+      } else {
+        cart.push({ name, price, quantity: 1 });
+      }
+      showAlert();
+      updateCart();
+    }
+
+    function removeFromCart(name) {
+      const index = cart.findIndex(item => item.name === name);
+      if (index !== -1) {
+        cart.splice(index, 1);
+        updateCart();
+        saveCart();
+      }
+    }
+
+    function updateCart() {
+      cartItemsContainer.innerHTML = "";
+      let total = 0;
+
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = "<p class='text-gray-500'>Seu carrinho está vazio.</p>";
+      }
+
+      cart.forEach(item => {
+        total += item.price * item.quantity;
+        const div = document.createElement("div");
+        div.classList.add("flex", "justify-between", "items-center");
+        div.innerHTML = `
+          <span>${item.name} x${item.quantity}</span>
+          <div class="flex items-center gap-2">
+            <span>R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}</span>
+            <button onclick="removeFromCart('${item.name}')" class="text-rose-600 hover:underline text-sm">Remover</button>
+          </div>
+        `;
+        cartItemsContainer.appendChild(div);
+      });
+
+      cartTotal.textContent = total.toFixed(2).replace('.', ',');
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      cartCount.textContent = totalItems;
+      saveCart();
+    }
+
+    function showAlert() {
+      const alertBox = document.getElementById("alert-msg");
+      alertBox.classList.remove("hidden");
+      alertBox.classList.add("animate-bounce");
+      setTimeout(() => {
+        alertBox.classList.add("hidden");
+        alertBox.classList.remove("animate-bounce");
+      }, 1500);
+    }
+
+    function saveCart() {
+      localStorage.setItem("carrinho", JSON.stringify(cart));
+    }
+
+    function finalizarCompra() {
+      if (cart.length === 0) {
+        alert("O carrinho está vazio");
+        return;
+      }
+      cartModal.classList.add("hidden");
+      document.getElementById("address-modal").classList.remove("hidden");
+    }
+
+    function closeAddressModal() {
+      addressModal.classList.add("hidden");
+      document.getElementById("address-input").value = "";
+    }
+
+    function enviarPedidoWhatsapp() {
+      const endereco = document.getElementById("address-input").value.trim();
+
+      if (endereco === "") {
+        alert("Por favor, preencha o endereço de entrega.");
+        return;
+      }
+
+      let mensagem = "🛒 *Pedido BRLink Inside*%0A%0A";
+      cart.forEach(item => {
+        mensagem += `• ${item.name} x${item.quantity} - R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}%0A`;
+      });
+
+      const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      mensagem += `%0A💰 *Total:* R$ ${total.toFixed(2).replace('.', ',')}%0A`;
+      mensagem += `%0A📦 *Endereço de entrega:* %0A${endereco}`;
+
+      const numeroWhatsApp = "5511991234567"; // substitua pelo número com DDD
+      const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURI(mensagem)}`;
+
+      // Limpa e fecha tudo
+      cart.length = 0;
+      updateCart();
+      closeAddressModal();
+
+      window.open(url, "_blank");
+    }
+
+    // Controle dos sliders (exemplo para um slider)
+    const sliders = [
+      { prev: 'prev-conjuntos', next: 'next-conjuntos', slider: 'slider-conjuntos' },
+      { prev: 'prev-sutias', next: 'next-sutias', slider: 'slider-sutias' },
+      { prev: 'prev-calcinhas', next: 'next-calcinhas', slider: 'slider-calcinhas' },
+      { prev: 'prev-acessorios', next: 'next-acessorios', slider: 'slider-acessorios' }
+    ];
+
+    sliders.forEach(({ prev, next, slider }) => {
+      const sliderElement = document.getElementById(slider);
+      const prevBtn = document.getElementById(prev);
+      const nextBtn = document.getElementById(next);
+      const scrollAmount = 220;
+
+      prevBtn.addEventListener('click', () => {
+        sliderElement.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      });
+
+      nextBtn.addEventListener('click', () => {
+        sliderElement.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      });
+    });
+  </script>
+
+</body>
+</html>
