@@ -299,7 +299,7 @@
 
       const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
       mensagem += `💰 *Total:* R$ ${total.toFixed(2).replace('.', ',')}`;
-      mensagem += `📦 *Endereço de entrega:*$index{endereco}`;
+      mensagem += `📦 *Endereço de entrega:* ${endereco}`;
 
       const numeroWhatsApp = "5511991234567"; // substitua pelo número com DDD
       const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURI(mensagem)}`;
